@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 
 import com.querydsl.jpa.impl.JPAQuery;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import vn.elca.training.model.entity.QProject;
 
 @ContextConfiguration(classes = {ApplicationWebConfig.class})
 @RunWith(value=SpringRunner.class)
+@Ignore
 public class ProjectRepositoryTest {
     @PersistenceContext
     private EntityManager em;
