@@ -67,6 +67,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(mp, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler({
+            EntityNotFoundException.class
+    })
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ResponseEntity<MessageReponse> notFoundAbstract(Exception ex) {
+        logger.info(ex.getMessage(), ex);
+        MessageReponse mp = new MessageReponse(StatusCode.NOT_FOUND.getCode(), Collections.singletonList(ex.getMessage()));
+        return new ResponseEntity<>(mp, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(
             StaleObjectStateException.class
     )
@@ -86,7 +96,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         MessageReponse mp = new MessageReponse(StatusCode.PENDD_INVAL.getCode(), objectErrors);
         objectErrors.forEach(p -> logger.info(p, ex));
         return new ResponseEntity<>(mp, headers, HttpStatus.BAD_REQUEST);
-
     }
 
 }

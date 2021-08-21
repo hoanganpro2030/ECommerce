@@ -1,8 +1,6 @@
 package vn.elca.training.service.impl;
 
 import org.hibernate.Hibernate;
-import org.hibernate.Session;
-import org.hibernate.SessionBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -125,8 +123,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ListResponse<Project> searchProject(String searchText, Status searchStatus, int page) {
-
-        ListResponse<Project> lp = projectRepository.searchProject(searchText, searchStatus, page);
-        return lp;
+        return projectRepository.searchProject(searchText, searchStatus, page);
     }
 }
