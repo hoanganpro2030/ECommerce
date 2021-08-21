@@ -43,50 +43,50 @@ public class TaskServiceTest {
 	@Autowired
 	private TaskService taskService;
 
-	private void createProjectAndTaskData(int nbProjects, int nbTasks) {
-		// create 'nbProjects' Projects, each project has 'nbTasks' tasks.
-		for (int i = 1; i <= nbProjects; i++) {
-//			LocalDate finishingDate = LocalDate.now().plusYears(1);
-//			Project project = new Project(String.format("Project %s", i), finishingDate);
-//			project = projectRepository.save(project);
-//			for (int j = 0; j < nbTasks; j++) {
-//				taskRepository.save(new Task(project, String.format("Task %s", j)));
-//			}
-		}
-	}
+//	private void createProjectAndTaskData(int nbProjects, int nbTasks) {
+//		// create 'nbProjects' Projects, each project has 'nbTasks' tasks.
+//		for (int i = 1; i <= nbProjects; i++) {
+////			LocalDate finishingDate = LocalDate.now().plusYears(1);
+////			Project project = new Project(String.format("Project %s", i), finishingDate);
+////			project = projectRepository.save(project);
+////			for (int j = 0; j < nbTasks; j++) {
+////				taskRepository.save(new Task(project, String.format("Task %s", j)));
+////			}
+//		}
+//	}
 
-	@Test
-	public void testListNumberOfTasks() {
-		createProjectAndTaskData(1, 3);
-		List<Project> projectsByTaskName = taskService.findProjectsByTaskName("Task 1");
-		Assert.assertTrue(taskService.listNumberOfTasks(projectsByTaskName).size() > 0);
-	}
-
-	@Test
-	public void testShowProjectNameOfTopTenNewTasks() {
-		createProjectAndTaskData(100, 1);
-		System.out.println(">>>>>>> Start Test case >>>>>");
-		List<String> names = taskService.listProjectNameOfRecentTasks();
-		Assert.assertTrue(names.size() > 0);
-	}
-
-	@SuppressWarnings("deprecation")
-	@Test
-	public void testUpdateDeadline() {
-		createProjectAndTaskData(1, 5);
-		final Long projectId = 1L;
-		final Task task = taskRepository.findOne(projectId);
-		final LocalDate finishingDate = task.getDeadline();
-		try {
-			// test update the deadline with a new invalid deadline
-			LocalDate newDeadline = finishingDate.plusYears(2);
-			taskService.updateDeadline(projectId, newDeadline);
-		} catch (DeadlineGreaterThanProjectFinishingDateException e) {
-			em.clear();
-			Task task1 = taskRepository.findOne(projectId);
-			Assert.assertEquals("Deadline should not be changed here", finishingDate, task1.getDeadline());
-		}
-	}
+//	@Test
+//	public void testListNumberOfTasks() {
+//		createProjectAndTaskData(1, 3);
+//		List<Project> projectsByTaskName = taskService.findProjectsByTaskName("Task 1");
+//		Assert.assertTrue(taskService.listNumberOfTasks(projectsByTaskName).size() > 0);
+//	}
+//
+//	@Test
+//	public void testShowProjectNameOfTopTenNewTasks() {
+//		createProjectAndTaskData(100, 1);
+//		System.out.println(">>>>>>> Start Test case >>>>>");
+//		List<String> names = taskService.listProjectNameOfRecentTasks();
+//		Assert.assertTrue(names.size() > 0);
+//	}
+//
+//	@SuppressWarnings("deprecation")
+//	@Test
+//	public void testUpdateDeadline() {
+//		createProjectAndTaskData(1, 5);
+//		final Long projectId = 1L;
+//		final Task task = taskRepository.findOne(projectId);
+//		final LocalDate finishingDate = task.getDeadline();
+//		try {
+//			// test update the deadline with a new invalid deadline
+//			LocalDate newDeadline = finishingDate.plusYears(2);
+//			taskService.updateDeadline(projectId, newDeadline);
+//		} catch (DeadlineGreaterThanProjectFinishingDateException e) {
+//			em.clear();
+//			Task task1 = taskRepository.findOne(projectId);
+//			Assert.assertEquals("Deadline should not be changed here", finishingDate, task1.getDeadline());
+//		}
+//	}
 
 //	@Test
 //	public void testCreateTaskForProject() {
