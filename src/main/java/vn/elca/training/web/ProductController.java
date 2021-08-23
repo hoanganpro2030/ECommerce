@@ -30,6 +30,12 @@ public class ProductController {
         return new ListResponse<>(0, rs.size(), rs.size(), rs);
     }
 
+    @GetMapping("/list/{page}/{size}")
+    @ResponseBody
+    public ListResponse<ProductDto> getListProductPaginate(@PathVariable int page, @PathVariable int size){
+        return productService.getAllProductPaginate(page, size);
+    }
+
     @GetMapping("/{id}")
     @ResponseBody
     public ProductDto getListProduct(@PathVariable Long id) throws EntityNotFoundException {

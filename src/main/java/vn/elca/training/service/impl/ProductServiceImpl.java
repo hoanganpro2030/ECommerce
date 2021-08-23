@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.elca.training.model.dto.ProductDto;
 import vn.elca.training.model.entity.Product;
 import vn.elca.training.model.exception.EntityNotFoundException;
+import vn.elca.training.model.response.ListResponse;
 import vn.elca.training.repository.ProductRepository;
 import vn.elca.training.service.ProductService;
 import vn.elca.training.util.MapService;
@@ -24,6 +25,17 @@ public class ProductServiceImpl implements ProductService {
         // TODO do not use find all to avoid n+1 select
         List<Product> productList = productRepository.findAll();
         return productList.stream().map(MapService.INSTANCE::productToProductDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public ListResponse<ProductDto> getAllProductPaginate(Integer page, Integer size) {
+        ListResponse<Product> listResponse = productRepository.findPaginationProducts(page, size);
+        ListResponse<ProductDto> listResponseDto = new ListResponse<>();
+        listResponseDto.setCurrent(listResponse.getCurrent());
+        listResponseDto.setSize(listResponse.getSize());
+        listResponseDto.setTotal(listResponse.getTotal());
+        listResponseDto.setData(MapService.INSTANCE.listProductToListProductDto(listResponse.getData()));
+        return listResponseDto;
     }
 
     @Override
