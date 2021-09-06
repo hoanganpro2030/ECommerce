@@ -3,6 +3,7 @@ package vn.elca.training.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import vn.elca.training.model.criteria.ProductSearchCriteria;
 import vn.elca.training.model.dto.ProductDto;
 import vn.elca.training.model.entity.Product;
 import vn.elca.training.model.exception.EntityNotFoundException;
@@ -30,6 +31,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ListResponse<ProductDto> getAllProductPaginate(Integer page, Integer size) {
         ListResponse<Product> listResponse = productRepository.findPaginationProducts(page, size);
+        return mapToProductDtoListResponse(listResponse);
+    }
+
+    @Override
+    public ListResponse<ProductDto> searchProductByCriteria(ProductSearchCriteria criteria, Integer page, Integer pageSize) {
+        ListResponse<Product> listResponse = productRepository.searchProductByCriteria(criteria, page, pageSize);
+        return mapToProductDtoListResponse(listResponse);
+    }
+
+    private ListResponse<ProductDto> mapToProductDtoListResponse(ListResponse<Product> listResponse) {
         ListResponse<ProductDto> listResponseDto = new ListResponse<>();
         listResponseDto.setCurrent(listResponse.getCurrent());
         listResponseDto.setSize(listResponse.getSize());

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import vn.elca.training.model.criteria.ProductSearchCriteria;
 import vn.elca.training.model.dto.ProductDto;
 import vn.elca.training.model.exception.EntityNotFoundException;
 import vn.elca.training.model.exception.ProjectNotFoundException;
@@ -34,6 +35,14 @@ public class ProductController {
     @ResponseBody
     public ListResponse<ProductDto> getListProductPaginate(@PathVariable int page, @PathVariable int size){
         return productService.getAllProductPaginate(page, size);
+    }
+
+    @PostMapping("/search/{page}/{size}")
+    @ResponseBody
+    public ListResponse<ProductDto> getListProductPaginate(@RequestBody ProductSearchCriteria criteria,
+                                                           @PathVariable int page,
+                                                           @PathVariable int size){
+        return productService.searchProductByCriteria(criteria, page, size);
     }
 
     @GetMapping("/{id}")

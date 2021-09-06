@@ -1,13 +1,12 @@
 package vn.elca.training.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import vn.elca.training.model.enumeration.TypeProductCode;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -22,7 +21,7 @@ public class Product {
     @Column(nullable = false, length = 50)
     private String name;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false)
     private String description;
 
     @Column(nullable = false)
@@ -31,11 +30,19 @@ public class Product {
     @Column(nullable = false)
     private Integer price;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 255)
     private String image;
 
     @Column(nullable = false)
     private LocalDate dateStockIn;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private Category category;
+
+    @Column(nullable = false, length = 10)
+    @Enumerated(EnumType.STRING)
+    private TypeProductCode productType;
 
     @Column(nullable = false)
     @Version
