@@ -67,6 +67,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(mp, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler({
+            EntityNotFoundException.class
+    })
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ResponseEntity<MessageReponse> notFoundAbstract(Exception ex) {
+        logger.info(ex.getMessage(), ex);
+        MessageReponse mp = new MessageReponse(StatusCode.NOT_FOUND.getCode(), Collections.singletonList(ex.getMessage()));
+        return new ResponseEntity<>(mp, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(
             StaleObjectStateException.class
     )
@@ -74,6 +84,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<MessageReponse> conflict(StaleObjectStateException ex) {
         logger.info(ex.getMessage(), ex);
         MessageReponse mp = new MessageReponse(StatusCode.PCONCUR_UPD.getCode(), Collections.singletonList(ex.getMessage()));
+        return new ResponseEntity<>(mp, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(
+            NotEnoughProductQuantityException.class
+    )
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ResponseEntity<MessageReponse> notEnoughQuantityProduct(NotEnoughProductQuantityException ex) {
+        logger.info(ex.getMessage(), ex);
+        MessageReponse mp = new MessageReponse(StatusCode.QUANT_P_NOT_ENOUGH.getCode(), Collections.singletonList(ex.getMessage()), ex.getProductName());
         return new ResponseEntity<>(mp, HttpStatus.CONFLICT);
     }
 
@@ -86,7 +106,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         MessageReponse mp = new MessageReponse(StatusCode.PENDD_INVAL.getCode(), objectErrors);
         objectErrors.forEach(p -> logger.info(p, ex));
         return new ResponseEntity<>(mp, headers, HttpStatus.BAD_REQUEST);
-
     }
 
 }

@@ -14,10 +14,14 @@ public enum StatusCode {
     PDELETE_NOTNEW("error.project-del.notnew"),
     PNUM_CHANGE("error.project-num.change"),
     PNOT_FOUND("error.project.not-found"),
+    NOT_FOUND("error.entity.not-found"),
     PCONCUR_UPD("error.project.concur-upd"),
     PNUM_EXISTED("error.project-num.existed"),
     INTERNAL_ERROR("error.server.internal"),
-    PDELETE_OK("success.project.delete");
+    PDELETE_OK("success.project.delete"),
+    DELETE_OK("success.entity.delete"),
+    DELETE_NOT_FOUND("error.not-found.delete"),
+    QUANT_P_NOT_ENOUGH("error.purchase-order.not-enough");
     private final String code;
 
     StatusCode(String code) {

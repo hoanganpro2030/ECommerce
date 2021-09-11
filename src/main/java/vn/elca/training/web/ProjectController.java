@@ -103,7 +103,7 @@ public class ProjectController {
                                                   @RequestParam(defaultValue = "") Status searchStatus,
                                                   @PathVariable int page) {
         ListResponse<Project> paginate = projectService.searchProject(searchText, searchStatus, page);
-        List<ProjectDto> response = paginate.getData().stream().map(l->Mapper.projectToProjectDto(l)).collect(Collectors.toList());
+        List<ProjectDto> response = paginate.getData().stream().map(Mapper::projectToProjectDto).collect(Collectors.toList());
         return new ListResponse<>(paginate.getCurrent(), paginate.getTotal(), paginate.getSize(), response);
     }
 

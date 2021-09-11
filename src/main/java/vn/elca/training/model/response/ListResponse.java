@@ -1,9 +1,11 @@
 package vn.elca.training.model.response;
 
+import lombok.NoArgsConstructor;
 import vn.elca.training.model.entity.Project;
 
 import java.util.List;
 
+@NoArgsConstructor
 public class ListResponse<T> {
     private int current;
     private int total;
