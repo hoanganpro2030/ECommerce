@@ -87,6 +87,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(mp, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(
+            NotEnoughProductQuantityException.class
+    )
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ResponseEntity<MessageReponse> notEnoughQuantityProduct(NotEnoughProductQuantityException ex) {
+        logger.info(ex.getMessage(), ex);
+        MessageReponse mp = new MessageReponse(StatusCode.QUANT_P_NOT_ENOUGH.getCode(), Collections.singletonList(ex.getMessage()), ex.getProductName());
+        return new ResponseEntity<>(mp, HttpStatus.CONFLICT);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers,

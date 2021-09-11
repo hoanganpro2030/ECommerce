@@ -13,6 +13,7 @@ import org.springframework.context.annotation.PropertySource;
 import vn.elca.training.service.ProjectService;
 import vn.elca.training.web.ApplicationController;
 import vn.elca.training.web.ProjectController;
+import vn.elca.training.web.PurchaseOrderController;
 
 /**
  * @author gtn

@@ -20,7 +20,8 @@ public enum StatusCode {
     INTERNAL_ERROR("error.server.internal"),
     PDELETE_OK("success.project.delete"),
     DELETE_OK("success.entity.delete"),
-    DELETE_NOT_FOUND("error.not-found.delete");
+    DELETE_NOT_FOUND("error.not-found.delete"),
+    QUANT_P_NOT_ENOUGH("error.purchase-order.not-enough");
     private final String code;
 
     StatusCode(String code) {
