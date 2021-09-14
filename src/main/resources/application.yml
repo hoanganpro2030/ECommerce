@@ -1,0 +1,9 @@
+
+server:
+  port:
+    8080
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-uri:

@@ -5,19 +5,37 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "ACM_USER")
-public class ACMUser {
+public class ACMUser implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(nullable = false, updatable = false)
     private Long id;
 
-    @Column(nullable = true, unique = true)
+    private String userId;
+
     private String username;
 
     private String password;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String profileImageUrl;
+    private Date lastLoginDate;
+    private Date lastLoginDateDisplay;
+    private Date joinDate;
+    private String[] roles;
+    private String[] authorities;
+    private boolean isActive;
+    private boolean isNotLocked;
 }

@@ -9,15 +9,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.stream;
 
 @AllArgsConstructor
 @Getter
 @Setter
-public class ACMUserDetail implements UserDetails {
+public class UserPrincipal implements UserDetails {
     private ACMUser user;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+        return stream(this.user.getAuthorities()).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
     @Override
@@ -37,7 +40,7 @@ public class ACMUserDetail implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return this.user.isNotLocked();
     }
 
     @Override
@@ -47,6 +50,6 @@ public class ACMUserDetail implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.isActive();
     }
 }

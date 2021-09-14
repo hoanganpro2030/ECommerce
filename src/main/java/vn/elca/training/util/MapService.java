@@ -3,9 +3,11 @@ package vn.elca.training.util;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import vn.elca.training.model.dto.ACMUserDto;
 import vn.elca.training.model.dto.CategoryDto;
 import vn.elca.training.model.dto.ProductDto;
 import vn.elca.training.model.dto.PurchaseOrderDto;
+import vn.elca.training.model.entity.ACMUser;
 import vn.elca.training.model.entity.Category;
 import vn.elca.training.model.entity.Product;
 import vn.elca.training.model.entity.PurchaseOrder;
@@ -24,4 +26,6 @@ public interface MapService {
     List<Product> listProductDtoToListProduct(List<ProductDto> dtoes);
     PurchaseOrder purchaseOrderDtoTopurchaseOrder(PurchaseOrderDto dto);
     PurchaseOrderDto purchaseOrderTopurchaseOrderDto(PurchaseOrder entity);
+    ACMUserDto ACMUserToACMUserDto(ACMUser entity);
+    ACMUser ACMUserDtoToACMUser(ACMUserDto dto);
 }
