@@ -16,6 +16,8 @@ import vn.elca.training.service.ACMUserService;
 import vn.elca.training.service.impl.LoginAttemptService;
 import vn.elca.training.util.JWTTokenProvider;
 
+import javax.mail.MessagingException;
+
 import static org.springframework.http.HttpStatus.OK;
 import static vn.elca.training.constant.SecurityConstant.JWT_TOKEN_HEADER;
 
@@ -48,7 +50,7 @@ public class AuthenticationController extends ApiExceptionHandler{
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ACMUser> register(@RequestBody ACMUser user) throws UserNotFoundException, UserNameExistException, EmailExistException {
+    public ResponseEntity<ACMUser> register(@RequestBody ACMUser user) throws UserNotFoundException, UserNameExistException, EmailExistException, MessagingException {
         ACMUser newUser = userService.register(user.getFullName(), user.getUsername(), user.getEmail());
         return new ResponseEntity<>(newUser, OK);
     }
@@ -66,7 +68,9 @@ public class AuthenticationController extends ApiExceptionHandler{
                 loginAttemptService.evictUserToLoginAttemptCache(username);
             }
         } catch (BadCredentialsException e) {
-            loginAttemptService.addUserToLoginAttemptCache(username);
+            if (userService.findUserByUsername(username) != null) {
+                loginAttemptService.addUserToLoginAttemptCache(username);
+            }
             throw e;
         }
     }
