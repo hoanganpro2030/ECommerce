@@ -27,15 +27,15 @@ public class ACMUser implements Serializable {
     private String username;
 
     private String password;
-    private String firstName;
-    private String lastName;
+    private String fullName;
     private String email;
     private String profileImageUrl;
     private Date lastLoginDate;
     private Date lastLoginDateDisplay;
     private Date joinDate;
-    private String[] roles;
+    private String role;
     private String[] authorities;
     private boolean isActive;
     private boolean isNotLocked;
 }
+

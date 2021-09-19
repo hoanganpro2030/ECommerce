@@ -5,10 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.web.ErrorMvcAutoConfiguration;
+//import org.springframework.boot.autoconfigure.web.ErrorMvcAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
+//import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
@@ -41,16 +41,16 @@ import vn.elca.training.web.PurchaseOrderController;
  * @author gtn
  */
 @SpringBootApplication(scanBasePackages = "vn.elca.training")
-@EnableAutoConfiguration(exclude = {ErrorMvcAutoConfiguration.class})
+//@EnableAutoConfiguration(exclude = {ErrorMvcAutoConfiguration.class})
 @ComponentScan(basePackageClasses = {ApplicationController.class, ProjectController.class, ProjectService.class,
         JwtAuthorizationFilter.class, JWTTokenProvider.class})
 @PropertySource({"classpath:/application.properties", "classpath:/messages.properties"})
-public class ApplicationWebConfig extends SpringBootServletInitializer {
+public class ApplicationWebConfig {
 
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-        return builder.sources(ApplicationWebConfig.class);
-    }
+//    @Override
+//    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+//        return builder.sources(ApplicationWebConfig.class);
+//    }
 
     @Bean
     ServletRegistrationBean h2servletRegistration() {
@@ -111,7 +111,7 @@ public class ApplicationWebConfig extends SpringBootServletInitializer {
 
         @Bean
         @Override
-        public AuthenticationManager authenticationManager() throws Exception{
+        public AuthenticationManager authenticationManagerBean() throws Exception{
             return super.authenticationManagerBean();
         }
 
