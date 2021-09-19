@@ -19,7 +19,9 @@ import vn.elca.training.model.exception.UserNameExistException;
 import vn.elca.training.model.exception.UserNotFoundException;
 import vn.elca.training.repository.ACMUserRepository;
 import vn.elca.training.service.ACMUserService;
+import vn.elca.training.service.EmailService;
 
+import javax.mail.MessagingException;
 import java.util.Date;
 import java.util.List;
 
@@ -40,6 +42,9 @@ public class ACMUserServiceImpl implements UserDetailsService, ACMUserService {
 
     @Autowired
     private LoginAttemptService loginAttemptService;
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -71,7 +76,7 @@ public class ACMUserServiceImpl implements UserDetailsService, ACMUserService {
     }
 
     @Override
-    public ACMUser register(String fullName, String username, String email) throws UserNotFoundException, UserNameExistException, EmailExistException {
+    public ACMUser register(String fullName, String username, String email) throws UserNotFoundException, UserNameExistException, EmailExistException, MessagingException {
         validateNewUsernameAndEmail(EMPTY, username, email);
         ACMUser user = new ACMUser();
         user.setUserId(generateUserId());
@@ -89,6 +94,7 @@ public class ACMUserServiceImpl implements UserDetailsService, ACMUserService {
         user.setProfileImageUrl(getTemporaryProfileImageUrl());
         acmUserRepository.save(user);
         log.info("New user password: " + password);
+        emailService.sendNewPasswordEmail(fullName, password, email);
         return user;
     }
 
