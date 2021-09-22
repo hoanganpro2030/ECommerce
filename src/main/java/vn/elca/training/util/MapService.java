@@ -14,7 +14,7 @@ import vn.elca.training.model.entity.PurchaseOrder;
 
 import java.util.List;
 
-@Mapper
+@Mapper(config = MapConfiguration.class)
 public interface MapService {
     MapService INSTANCE = Mappers.getMapper( MapService.class );
 
@@ -26,6 +26,4 @@ public interface MapService {
     List<Product> listProductDtoToListProduct(List<ProductDto> dtoes);
     PurchaseOrder purchaseOrderDtoTopurchaseOrder(PurchaseOrderDto dto);
     PurchaseOrderDto purchaseOrderTopurchaseOrderDto(PurchaseOrder entity);
-    ACMUserDto ACMUserToACMUserDto(ACMUser entity);
-    ACMUser ACMUserDtoToACMUser(ACMUserDto dto);
 }

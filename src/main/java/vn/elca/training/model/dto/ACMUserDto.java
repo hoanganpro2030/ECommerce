@@ -5,15 +5,30 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @NoArgsConstructor
 public class ACMUserDto {
     private Long id;
 
+    private String userId;
+
     @NotBlank
     private String username;
 
-    @NotBlank
     private String password;
+
+    private String fullName;
+    private String email;
+    private String profileImageUrl;
+    private Date lastLoginDate;
+    private Date lastLoginDateDisplay;
+    private Date joinDate;
+    private String role;
+    private String[] authorities;
+    private Boolean isActive;
+    private Boolean isNotLocked;
+    private Integer version;
 }
