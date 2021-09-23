@@ -2,7 +2,7 @@ package vn.elca.training.constant;
 
 public class SecurityConstant {
     public static final long EXPIRATION_TIME = 432_000_000;
-    public static final String TOKEN_PREFIX = "Bearer";
+    public static final String TOKEN_PREFIX = "Bearer ";
     public static final String JWT_TOKEN_HEADER = "Jwt-Token";
     public static final String TOKEN_CANNOT_BE_VERIFIED = "Token cannot be verified";
     public static final String GET_ARRAY_LLC = "Get Arrays, LLC";

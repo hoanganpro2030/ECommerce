@@ -33,7 +33,7 @@ import static vn.elca.training.constant.FileConstant.*;
 
 @CrossOrigin(origins = "http://127.0.0.1:4200")
 @RestController
-@RequestMapping("/acmuser")
+@RequestMapping("/user")
 public class UserController {
     public static final String EMAIL_SENT = "An email with a password was sent to: ";
     public static final String USER_DELETE_SUCCESSFULLY = "User delete successfully";
