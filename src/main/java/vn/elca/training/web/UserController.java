@@ -10,10 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import vn.elca.training.model.dto.ACMUserDto;
 import vn.elca.training.model.entity.ACMUser;
 import vn.elca.training.model.entity.HttpResponse;
-import vn.elca.training.model.exception.EmailExistException;
-import vn.elca.training.model.exception.EmailNotFoundExeption;
-import vn.elca.training.model.exception.UserNameExistException;
-import vn.elca.training.model.exception.UserNotFoundException;
+import vn.elca.training.model.exception.*;
 import vn.elca.training.service.ACMUserService;
 import vn.elca.training.service.impl.LoginAttemptService;
 import vn.elca.training.util.JWTTokenProvider;
@@ -54,14 +51,14 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<ACMUserDto> addNewUser(@RequestBody ACMUserDto userDto,
-                                                 @RequestParam(required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistException, MessagingException, IOException, UserNameExistException {
+                                                 @RequestParam(required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistException, MessagingException, IOException, UserNameExistException, MissingInformationRequiredException {
         ACMUserDto newUserDto = userService.addNewUser(userDto, profileImage);
         return new ResponseEntity<>(newUserDto, HttpStatus.OK);
     }
 
     @PostMapping("/update")
     public ResponseEntity<ACMUserDto> updateUser(@RequestBody ACMUserDto userDto,
-                                                 @RequestParam(required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistException, IOException, UserNameExistException {
+                                                 @RequestParam(required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistException, IOException, UserNameExistException, MissingInformationRequiredException {
         ACMUserDto updatedUserDto = userService.updateUser(userDto, profileImage);
         return new ResponseEntity<>(updatedUserDto, HttpStatus.OK);
     }
@@ -79,13 +76,13 @@ public class UserController {
         return new ResponseEntity<>(userDtos, HttpStatus.OK);
     }
 
-    @GetMapping("/resetPassword/{email}")
-    public ResponseEntity<HttpResponse> resetPassword(@PathVariable String email) throws EmailNotFoundExeption, MessagingException {
-        userService.resetPassword(email);
+    @GetMapping("/resetPassword/{uid}")
+    public ResponseEntity<HttpResponse> resetPassword(@PathVariable Long uid) throws MessagingException, UserNotFoundException {
+        String email = userService.resetPassword(uid);
         return response(HttpStatus.OK, EMAIL_SENT + email);
     }
 
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasAnyAuthority('user:delete')")
     public ResponseEntity<HttpResponse> deleteUser(@PathVariable long id) {
         userService.deleteUser(id);
@@ -101,7 +98,7 @@ public class UserController {
 
     @GetMapping(path = "/image/{username}/{filename}", produces = IMAGE_JPEG_VALUE)
     public byte[] resetPassword(@PathVariable String username, @PathVariable String filename) throws IOException {
-        return Files.readAllBytes(Paths.get(USER_FOLDER + username + FORWARD_SLASH + filename));
+        return Files.readAllBytes(Paths.get(USER_FOLDER + username + FORWARD_SLASH + filename + DOT + JPG_EXTENSION));
     }
 
     @GetMapping(path = "/image/profile/{username}", produces = IMAGE_JPEG_VALUE)

@@ -17,10 +17,7 @@ import vn.elca.training.model.dto.ACMUserDto;
 import vn.elca.training.model.entity.ACMUser;
 import vn.elca.training.model.entity.UserPrincipal;
 import vn.elca.training.model.enumeration.Role;
-import vn.elca.training.model.exception.EmailExistException;
-import vn.elca.training.model.exception.EmailNotFoundExeption;
-import vn.elca.training.model.exception.UserNameExistException;
-import vn.elca.training.model.exception.UserNotFoundException;
+import vn.elca.training.model.exception.*;
 import vn.elca.training.repository.ACMUserRepository;
 import vn.elca.training.service.ACMUserService;
 import vn.elca.training.service.EmailService;
@@ -39,6 +36,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static vn.elca.training.constant.FileConstant.*;
 import static vn.elca.training.constant.UserImplConstant.*;
+import static vn.elca.training.constant.ValidatorConstant.MISSING_INFORMATION_REQUIRED;
 import static vn.elca.training.model.enumeration.Role.ROLE_USER;
 
 @Service
@@ -132,13 +130,16 @@ public class ACMUserServiceImpl implements UserDetailsService, ACMUserService {
     }
 
     @Override
-    public ACMUserDto addNewUser(ACMUserDto userDto, MultipartFile profileImage) throws UserNotFoundException, UserNameExistException, EmailExistException, MessagingException, IOException {
+    public ACMUserDto addNewUser(ACMUserDto userDto, MultipartFile profileImage) throws UserNotFoundException, UserNameExistException, EmailExistException, MessagingException, IOException, MissingInformationRequiredException {
         validateNewUsernameAndEmail(EMPTY, userDto.getUsername(), userDto.getEmail());
         String password = generatePassword();
         String encodedPassword = encodePassword(password);
         ACMUser user = UserMapper.INSTANCE.ACMUserDtoToACMUser(userDto);
         user.setUserId(generateUserId());
         user.setJoinDate(new Date());
+        if (userDto.getRole() == null) {
+            throw new MissingInformationRequiredException(MISSING_INFORMATION_REQUIRED + "Role");
+        }
         user.setRole(getRoleEnumName(userDto.getRole()).name());
         user.setAuthorities(getRoleEnumName(userDto.getRole()).getAuthorities());
         user.setProfileImageUrl(getTemporaryProfileImageUrl(userDto.getUsername()));
@@ -170,17 +171,25 @@ public class ACMUserServiceImpl implements UserDetailsService, ACMUserService {
     }
 
     @Override
-    public ACMUserDto updateUser(ACMUserDto userDto, MultipartFile profileImage) throws UserNotFoundException, UserNameExistException, EmailExistException, IOException {
-        validateNewUsernameAndEmail(EMPTY, userDto.getUsername(), userDto.getEmail());
+    public ACMUserDto updateUser(ACMUserDto userDto, MultipartFile profileImage) throws UserNotFoundException, UserNameExistException, EmailExistException, IOException, MissingInformationRequiredException {
+        if ( userDto.getId() == null) {
+           throw new MissingInformationRequiredException(MISSING_INFORMATION_REQUIRED + "user id");
+        }
         ACMUser user = acmUserRepository.findOne(userDto.getId());
         if (user == null) {
             throw new UserNotFoundException(NO_USER_FOUND_BY_ID + userDto.getId());
         }
-        if (userDto.getAuthorities() != null && userDto.getAuthorities().length != 0) {
-            user.setAuthorities(getRoleEnumName(userDto.getRole()).getAuthorities());
+        if ( userDto.getUsername() != null ) {
+            validateNewUsernameAndEmail(EMPTY, userDto.getUsername(), EMPTY);
+            user.setUsername( userDto.getUsername() );
+        }
+        if ( userDto.getEmail() != null ) {
+            validateNewUsernameAndEmail(EMPTY, EMPTY, userDto.getEmail());
+            user.setEmail( userDto.getEmail() );
         }
         if ( userDto.getRole() != null) {
             user.setRole(getRoleEnumName(userDto.getRole()).name());
+            user.setAuthorities(getRoleEnumName(userDto.getRole()).getAuthorities());
         }
         if ( userDto.getIsActive() != null ) {
             user.setActive( userDto.getIsActive() );
@@ -188,14 +197,8 @@ public class ACMUserServiceImpl implements UserDetailsService, ACMUserService {
         if ( userDto.getIsNotLocked() != null ) {
             user.setNotLocked( userDto.getIsNotLocked() );
         }
-        if ( userDto.getUsername() != null ) {
-            user.setUsername( userDto.getUsername() );
-        }
         if ( userDto.getFullName() != null ) {
             user.setFullName( userDto.getFullName() );
-        }
-        if ( userDto.getEmail() != null ) {
-            user.setEmail( userDto.getEmail() );
         }
         saveProFileImage(user, profileImage);
         acmUserRepository.save(user);
@@ -203,15 +206,16 @@ public class ACMUserServiceImpl implements UserDetailsService, ACMUserService {
     }
 
     @Override
-    public void resetPassword(String email) throws EmailNotFoundExeption, MessagingException {
-        ACMUser user = acmUserRepository.findACMUserByEmail(email);
+    public String resetPassword(Long uid) throws MessagingException, UserNotFoundException {
+        ACMUser user = acmUserRepository.findOne(uid);
         if (user == null) {
-            throw new EmailNotFoundExeption(NO_USER_FOUND_BY_EMAIL + email);
+            throw new UserNotFoundException(NO_USER_FOUND_BY_ID + uid);
         }
         String password = generatePassword();
         user.setPassword(encodePassword(password));
         acmUserRepository.save(user);
-        emailService.sendNewPasswordEmail(user.getFullName(), password, email);
+        emailService.sendNewPasswordEmail(user.getFullName(), password, user.getEmail());
+        return user.getEmail();
     }
 
     private Role getRoleEnumName(String role) {

@@ -85,6 +85,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return createHttpResponse(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
 
+    @ExceptionHandler(MissingInformationRequiredException.class)
+    public ResponseEntity<HttpResponse> missingInformationRequiredException(MissingInformationRequiredException exception) {
+        return createHttpResponse(HttpStatus.BAD_REQUEST, exception.getMessage());
+    }
+
     @ExceptionHandler(UserNameExistException.class)
     public ResponseEntity<HttpResponse> userNameExistException(UserNameExistException exception) {
         return createHttpResponse(HttpStatus.BAD_REQUEST, exception.getMessage());

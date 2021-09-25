@@ -3,10 +3,7 @@ package vn.elca.training.service;
 import org.springframework.web.multipart.MultipartFile;
 import vn.elca.training.model.dto.ACMUserDto;
 import vn.elca.training.model.entity.ACMUser;
-import vn.elca.training.model.exception.EmailExistException;
-import vn.elca.training.model.exception.EmailNotFoundExeption;
-import vn.elca.training.model.exception.UserNameExistException;
-import vn.elca.training.model.exception.UserNotFoundException;
+import vn.elca.training.model.exception.*;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
@@ -23,11 +20,11 @@ public interface ACMUserService {
 
     ACMUser findUserByEmail(String email);
 
-    ACMUserDto addNewUser(ACMUserDto user, MultipartFile profileImage) throws UserNotFoundException, UserNameExistException, EmailExistException, MessagingException, IOException;
+    ACMUserDto addNewUser(ACMUserDto user, MultipartFile profileImage) throws UserNotFoundException, UserNameExistException, EmailExistException, MessagingException, IOException, MissingInformationRequiredException;
 
-    ACMUserDto updateUser(ACMUserDto userDto, MultipartFile profileImage) throws UserNotFoundException, UserNameExistException, EmailExistException, IOException;
+    ACMUserDto updateUser(ACMUserDto userDto, MultipartFile profileImage) throws UserNotFoundException, UserNameExistException, EmailExistException, IOException, MissingInformationRequiredException;
 
-    void resetPassword(String email) throws EmailNotFoundExeption, MessagingException;
+    String resetPassword(Long uid) throws MessagingException, UserNotFoundException;
 
     ACMUserDto updateProfileImage(String username, MultipartFile profileImage) throws UserNotFoundException, UserNameExistException, EmailExistException, IOException;
 }
