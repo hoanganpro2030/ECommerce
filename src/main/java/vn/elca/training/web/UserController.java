@@ -76,9 +76,9 @@ public class UserController {
         return new ResponseEntity<>(userDtos, HttpStatus.OK);
     }
 
-    @GetMapping("/resetPassword/{uid}")
-    public ResponseEntity<HttpResponse> resetPassword(@PathVariable Long uid) throws MessagingException, UserNotFoundException {
-        String email = userService.resetPassword(uid);
+    @GetMapping("/resetPassword")
+    public ResponseEntity<HttpResponse> resetPassword(@RequestParam String email) throws MessagingException, EmailNotFoundExeption {
+        userService.resetPassword(email);
         return response(HttpStatus.OK, EMAIL_SENT + email);
     }
 

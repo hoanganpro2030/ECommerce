@@ -206,16 +206,15 @@ public class ACMUserServiceImpl implements UserDetailsService, ACMUserService {
     }
 
     @Override
-    public String resetPassword(Long uid) throws MessagingException, UserNotFoundException {
-        ACMUser user = acmUserRepository.findOne(uid);
+    public void resetPassword(String email) throws MessagingException, EmailNotFoundExeption {
+        ACMUser user = acmUserRepository.findACMUserByEmail(email);
         if (user == null) {
-            throw new UserNotFoundException(NO_USER_FOUND_BY_ID + uid);
+            throw new EmailNotFoundExeption(NO_USER_FOUND_BY_EMAIL + email);
         }
         String password = generatePassword();
         user.setPassword(encodePassword(password));
         acmUserRepository.save(user);
         emailService.sendNewPasswordEmail(user.getFullName(), password, user.getEmail());
-        return user.getEmail();
     }
 
     private Role getRoleEnumName(String role) {

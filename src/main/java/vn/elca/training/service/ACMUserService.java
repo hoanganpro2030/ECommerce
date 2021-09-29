@@ -24,7 +24,7 @@ public interface ACMUserService {
 
     ACMUserDto updateUser(ACMUserDto userDto, MultipartFile profileImage) throws UserNotFoundException, UserNameExistException, EmailExistException, IOException, MissingInformationRequiredException;
 
-    String resetPassword(Long uid) throws MessagingException, UserNotFoundException;
+    void resetPassword(String email) throws MessagingException, EmailNotFoundExeption;
 
     ACMUserDto updateProfileImage(String username, MultipartFile profileImage) throws UserNotFoundException, UserNameExistException, EmailExistException, IOException;
 }
