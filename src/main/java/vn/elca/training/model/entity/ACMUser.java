@@ -37,6 +37,7 @@ public class ACMUser implements Serializable {
     private String[] authorities;
     private boolean isActive;
     private boolean isNotLocked;
+    private String verificationCode;
 
     @Column(nullable = false)
     @Version

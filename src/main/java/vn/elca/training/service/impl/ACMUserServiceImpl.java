@@ -21,7 +21,6 @@ import vn.elca.training.model.exception.*;
 import vn.elca.training.repository.ACMUserRepository;
 import vn.elca.training.service.ACMUserService;
 import vn.elca.training.service.EmailService;
-import vn.elca.training.util.MapService;
 import vn.elca.training.util.UserMapper;
 
 import javax.mail.MessagingException;
@@ -86,25 +85,25 @@ public class ACMUserServiceImpl implements UserDetailsService, ACMUserService {
     }
 
     @Override
-    public ACMUser register(String fullName, String username, String email) throws UserNotFoundException, UserNameExistException, EmailExistException, MessagingException {
-        validateNewUsernameAndEmail(EMPTY, username, email);
+    public ACMUser register(ACMUserDto userDto) throws UserNotFoundException, UserNameExistException, EmailExistException, MessagingException {
+        validateNewUsernameAndEmail(EMPTY, userDto.getUsername(), userDto.getEmail());
         ACMUser user = new ACMUser();
         user.setUserId(generateUserId());
-        String password = generatePassword();
-        String encodedPassword = encodePassword(password);
-        user.setFullName(fullName);
-        user.setUsername(username);
-        user.setEmail(email);
+
+        user.setVerificationCode(generateVerificationCode());
+        user.setFullName(userDto.getFullName());
+        user.setUsername(userDto.getUsername());
+        user.setPassword(encodePassword(userDto.getPassword()));
+        user.setEmail(userDto.getEmail());
         user.setJoinDate(new Date());
-        user.setPassword(encodedPassword);
-        user.setActive(true);
+        user.setActive(false);
         user.setNotLocked(true);
         user.setRole(ROLE_USER.name());
         user.setAuthorities(ROLE_USER.getAuthorities());
-        user.setProfileImageUrl(getTemporaryProfileImageUrl(username));
+        user.setProfileImageUrl(getTemporaryProfileImageUrl(userDto.getUsername()));
         acmUserRepository.save(user);
-        log.info("New user password: " + password);
-        emailService.sendNewPasswordEmail(fullName, password, email);
+//        log.info("New user password: " + password);
+        emailService.sendVerificationEmail(userDto.getFullName(), user.getVerificationCode(), userDto.getEmail());
         return user;
     }
 
@@ -132,7 +131,7 @@ public class ACMUserServiceImpl implements UserDetailsService, ACMUserService {
     @Override
     public ACMUserDto addNewUser(ACMUserDto userDto, MultipartFile profileImage) throws UserNotFoundException, UserNameExistException, EmailExistException, MessagingException, IOException, MissingInformationRequiredException {
         validateNewUsernameAndEmail(EMPTY, userDto.getUsername(), userDto.getEmail());
-        String password = generatePassword();
+        String password = generateVerificationCode();
         String encodedPassword = encodePassword(password);
         ACMUser user = UserMapper.INSTANCE.ACMUserDtoToACMUser(userDto);
         user.setUserId(generateUserId());
@@ -146,7 +145,7 @@ public class ACMUserServiceImpl implements UserDetailsService, ACMUserService {
         user.setPassword(encodedPassword);
         acmUserRepository.save(user);
         saveProFileImage(user, profileImage);
-        emailService.sendNewPasswordEmail(user.getFullName(), user.getPassword(), user.getEmail());
+        emailService.sendVerificationEmail(user.getFullName(), user.getPassword(), user.getEmail());
         return UserMapper.INSTANCE.ACMUserToACMUserDto(user);
     }
 
@@ -211,10 +210,20 @@ public class ACMUserServiceImpl implements UserDetailsService, ACMUserService {
         if (user == null) {
             throw new EmailNotFoundExeption(NO_USER_FOUND_BY_EMAIL + email);
         }
-        String password = generatePassword();
+        String password = generateVerificationCode();
         user.setPassword(encodePassword(password));
         acmUserRepository.save(user);
-        emailService.sendNewPasswordEmail(user.getFullName(), password, user.getEmail());
+        emailService.sendVerificationEmail(user.getFullName(), password, user.getEmail());
+    }
+
+    public void verifyNewUserAccount(String verificationCode, String email) throws EmailNotFoundExeption {
+        ACMUser user = acmUserRepository.findACMUserByEmail(email);
+        if (user == null) {
+            throw new EmailNotFoundExeption(NO_USER_FOUND_BY_EMAIL + email);
+        }
+        if (verificationCode.equals(user.getVerificationCode())) {
+            user.setActive(true);
+        }
     }
 
     private Role getRoleEnumName(String role) {
@@ -236,8 +245,8 @@ public class ACMUserServiceImpl implements UserDetailsService, ACMUserService {
         return passwordEncoder.encode(password);
     }
 
-    private String generatePassword() {
-        return RandomStringUtils.randomAlphanumeric(10);
+    private String generateVerificationCode() {
+        return RandomStringUtils.randomAlphanumeric(20);
     }
 
     private String generateUserId() {

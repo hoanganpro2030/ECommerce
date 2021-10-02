@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 import static vn.elca.training.constant.FileConstant.*;
 
@@ -113,6 +114,12 @@ public class UserController {
             }
         }
         return byteArrayOutputStream.toByteArray();
+    }
+
+    @GetMapping("/verify")
+    public ResponseEntity<HttpResponse> verifyAccount(@RequestParam String code, @RequestParam String email) throws EmailNotFoundExeption {
+        userService.verifyNewUserAccount(code, email);
+        return response(HttpStatus.OK, "Your account is activated. You can login now !");
     }
 
     private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {

@@ -24,6 +24,7 @@ public interface UserMapper {
     @Mapping(target = "notLocked", source = "isNotLocked")
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "authorities", ignore = true)
+    @Mapping(target = "verificationCode", ignore = true)
     ACMUser ACMUserDtoToACMUser(ACMUserDto dto);
 
     List<ACMUserDto> listACMUserToListACMUserDto(List<ACMUser> entity);

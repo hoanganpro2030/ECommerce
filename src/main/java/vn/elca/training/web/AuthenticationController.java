@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+import vn.elca.training.model.dto.ACMUserDto;
 import vn.elca.training.model.entity.ACMUser;
 import vn.elca.training.model.entity.UserPrincipal;
 import vn.elca.training.model.exception.EmailExistException;
@@ -50,8 +51,8 @@ public class AuthenticationController extends ApiExceptionHandler{
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ACMUser> register(@RequestBody ACMUser user) throws UserNotFoundException, UserNameExistException, EmailExistException, MessagingException {
-        ACMUser newUser = userService.register(user.getFullName(), user.getUsername(), user.getEmail());
+    public ResponseEntity<ACMUser> register(@RequestBody ACMUserDto userDto) throws UserNotFoundException, UserNameExistException, EmailExistException, MessagingException {
+        ACMUser newUser = userService.register(userDto);
         return new ResponseEntity<>(newUser, OK);
     }
 

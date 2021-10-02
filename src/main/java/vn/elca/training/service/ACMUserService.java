@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ACMUserService {
-    ACMUser register(String fullName, String username, String email) throws UserNotFoundException, UserNameExistException, EmailExistException, MessagingException;
+    ACMUser register(ACMUserDto userDto) throws UserNotFoundException, UserNameExistException, EmailExistException, MessagingException;
 
     List<ACMUserDto> getAllUsers();
 
@@ -25,6 +25,8 @@ public interface ACMUserService {
     ACMUserDto updateUser(ACMUserDto userDto, MultipartFile profileImage) throws UserNotFoundException, UserNameExistException, EmailExistException, IOException, MissingInformationRequiredException;
 
     void resetPassword(String email) throws MessagingException, EmailNotFoundExeption;
+
+    void verifyNewUserAccount(String verificationCode, String email) throws EmailNotFoundExeption;
 
     ACMUserDto updateProfileImage(String username, MultipartFile profileImage) throws UserNotFoundException, UserNameExistException, EmailExistException, IOException;
 }

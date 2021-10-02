@@ -2,6 +2,7 @@ package vn.elca.training.constant;
 
 public class EmailConstant {
     public static final String SIMPLE_MAIL_TRANSFER_PROTOCOL = "smtps";
+    public static final String FE_HOST = "http://127.0.0.1:4200";
     public static final String USERNAME = "foodblog1211@gmail.com";
     public static final String PASSWORD = "Dha12111998";
     public static final String FROM_EMAIL = "foodblog1211@gmail.com";
