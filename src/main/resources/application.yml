@@ -1,0 +1,9 @@
+
+server:
+  port:
+    5000
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-uri:
