@@ -6,7 +6,7 @@
     <groupId>vn.elca.training</groupId>
     <artifactId>on-boarding-exercise</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <properties>
         <version.spring-boot>1.5.22.RELEASE</version.spring-boot>
@@ -155,6 +155,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <executable>true</executable>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -219,6 +222,7 @@
                 </executions>
             </plugin>
         </plugins>
+        <finalName>ecmserver</finalName>
     </build>
 
 </project>

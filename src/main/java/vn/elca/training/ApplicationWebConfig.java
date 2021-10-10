@@ -124,7 +124,8 @@ public class ApplicationWebConfig {
             UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
             CorsConfiguration corsConfiguration = new CorsConfiguration();
             corsConfiguration.setAllowCredentials(true);
-            corsConfiguration.setAllowedOrigins(Collections.singletonList("http://127.0.0.1:4200"));
+//            corsConfiguration.setAllowedOrigins(Collections.singletonList("http://127.0.0.1:4200"));
+            corsConfiguration.setAllowedOrigins(Arrays.asList("http://127.0.0.1:4200", "http://18.188.153.21"));
             corsConfiguration.addAllowedMethod("*");
             corsConfiguration.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
                     "Accept", "Jwt-Token", "Authorization", "Origin, Accept", "X-Requested-With",
