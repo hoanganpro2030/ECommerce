@@ -105,6 +105,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return createHttpResponse(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
 
+//    @ExceptionHandler(TokenExpiredException.class)
+//    public ResponseEntity<HttpResponse> tokenExpiredException(TokenExpiredException exception) {
+//        return createHttpResponse(HttpStatus.BAD_REQUEST, exception.getMessage());
+//    }
+
 //    @ExceptionHandler(NoHandlerFoundException.class)
 //    public ResponseEntity<HttpResponse> noHandlerFoundException(NoHandlerFoundException exception) {
 //        return createHttpResponse(HttpStatus.BAD_REQUEST, "This page was not found");
@@ -197,10 +202,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             NotEnoughProductQuantityException.class
     )
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ResponseEntity<MessageReponse> notEnoughQuantityProduct(NotEnoughProductQuantityException ex) {
+    public ResponseEntity<HttpResponse> notEnoughQuantityProduct(NotEnoughProductQuantityException ex) {
         logger.info(ex.getMessage(), ex);
         MessageReponse mp = new MessageReponse(StatusCode.QUANT_P_NOT_ENOUGH.getCode(), Collections.singletonList(ex.getMessage()), ex.getProductName());
-        return new ResponseEntity<>(mp, HttpStatus.CONFLICT);
+        return createHttpResponse(HttpStatus.BAD_REQUEST, ex.getProductName() + " is out of stock !");
     }
 
     @Override
