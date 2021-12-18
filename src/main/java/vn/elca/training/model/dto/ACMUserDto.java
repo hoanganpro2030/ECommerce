@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -30,5 +31,6 @@ public class ACMUserDto {
     private String[] authorities;
     private Boolean isActive;
     private Boolean isNotLocked;
+//    private Set<AddressDto> addressDto;
     private Integer version;
 }

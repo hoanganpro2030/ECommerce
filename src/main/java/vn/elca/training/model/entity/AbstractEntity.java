@@ -13,7 +13,7 @@ public class AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
-    protected Integer id;
+    protected Long id;
 
 //    @Column(name = "USR_LOG_I", updatable = false)
 //    private String createdBy;
