@@ -63,7 +63,7 @@ public class UserController {
         return new ResponseEntity<>(newUserDto, HttpStatus.OK);
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<ACMUserDto> updateUser(@RequestBody ACMUserDto userDto,
                                                  @RequestParam(required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistException, IOException, UserNameExistException, MissingInformationRequiredException {
         ACMUserDto updatedUserDto = userService.updateUser(userDto, profileImage);
@@ -73,6 +73,13 @@ public class UserController {
     @GetMapping("/find/{username}")
     public ResponseEntity<ACMUserDto> getUser(@PathVariable("username") String username) {
         ACMUser user = userService.findUserByUsername(username);
+        ACMUserDto userDto = UserMapper.INSTANCE.ACMUserToACMUserDto(user);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<ACMUserDto> getUser(@PathVariable("userId") Long userId) {
+        ACMUser user = userService.findUserByUserId(userId);
         ACMUserDto userDto = UserMapper.INSTANCE.ACMUserToACMUserDto(user);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }

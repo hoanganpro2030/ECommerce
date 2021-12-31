@@ -39,7 +39,7 @@ public class ACMUser implements Serializable {
     private boolean isNotLocked;
     private String verificationCode;
 
-    @OneToMany(mappedBy = "acmUser")
+    @OneToMany(mappedBy = "acmUser", fetch = FetchType.LAZY)
     private Set<Address> address = new HashSet<>();
 
     @Column(nullable = false)

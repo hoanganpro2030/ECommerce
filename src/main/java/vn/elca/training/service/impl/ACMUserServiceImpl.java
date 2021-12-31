@@ -124,6 +124,11 @@ public class ACMUserServiceImpl implements UserDetailsService, ACMUserService {
     }
 
     @Override
+    public ACMUser findUserByUserId(Long userId) {
+        return acmUserRepository.findOne(userId);
+    }
+
+    @Override
     public ACMUser findUserByEmail(String email) {
         return acmUserRepository.findACMUserByEmail(email);
     }
