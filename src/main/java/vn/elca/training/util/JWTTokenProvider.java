@@ -32,7 +32,8 @@ public class JWTTokenProvider {
         String[] claims = getClaimsFromUser(userPrincipal);
         return JWT.create().withIssuer(GET_ARRAY_LLC).withAudience(GET_ARRAY_ADMINISTRATION)
                 .withIssuedAt(new Date()).withSubject(userPrincipal.getUsername())
-                .withArrayClaim(AUTHORITIES, claims).withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .withArrayClaim(AUTHORITIES, claims)
+//                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(Algorithm.HMAC512(secret.getBytes()));
     }
 
@@ -50,7 +51,8 @@ public class JWTTokenProvider {
 
     public boolean isTokenValid(String username, String token) {
         JWTVerifier verifier = getJWTVerifier();
-        return StringUtils.isNotEmpty(username) && !isTokenExpired(verifier, token);
+//        return StringUtils.isNotEmpty(username) && !isTokenExpired(verifier, token);
+        return StringUtils.isNotEmpty(username);
     }
 
     public String getSubject(String token) {

@@ -18,6 +18,8 @@ public interface ACMUserService {
 
     ACMUser findUserByUsername(String username);
 
+    ACMUser findUserByUserId(Long userId);
+
     ACMUser findUserByEmail(String email);
 
     ACMUserDto addNewUser(ACMUserDto user, MultipartFile profileImage) throws UserNotFoundException, UserNameExistException, EmailExistException, MessagingException, IOException, MissingInformationRequiredException;

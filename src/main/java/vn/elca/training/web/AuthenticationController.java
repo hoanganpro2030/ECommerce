@@ -16,6 +16,7 @@ import vn.elca.training.model.exception.UserNotFoundException;
 import vn.elca.training.service.ACMUserService;
 import vn.elca.training.service.impl.LoginAttemptService;
 import vn.elca.training.util.JWTTokenProvider;
+import vn.elca.training.util.UserMapper;
 
 import javax.mail.MessagingException;
 
@@ -42,12 +43,13 @@ public class AuthenticationController extends ApiExceptionHandler{
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ACMUser> login(@RequestBody ACMUser user) {
+    public ResponseEntity<ACMUserDto> login(@RequestBody ACMUser user) {
         authenticate(user.getUsername(), user.getPassword());
         ACMUser loginUser = userService.findUserByUsername(user.getUsername());
         UserPrincipal userPrincipal = new UserPrincipal(loginUser);
         HttpHeaders jwtHeader = getJwtHeader(userPrincipal);
-        return new ResponseEntity<>(loginUser, jwtHeader, OK);
+        ACMUserDto acmUserDto = UserMapper.INSTANCE.ACMUserToACMUserDto(loginUser);
+        return new ResponseEntity<>(acmUserDto, jwtHeader, OK);
     }
 
     @PostMapping("/register")

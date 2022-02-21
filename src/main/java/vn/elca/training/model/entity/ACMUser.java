@@ -1,15 +1,15 @@
 package vn.elca.training.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -38,6 +38,9 @@ public class ACMUser implements Serializable {
     private boolean isActive;
     private boolean isNotLocked;
     private String verificationCode;
+
+    @OneToMany(mappedBy = "acmUser", fetch = FetchType.LAZY)
+    private Set<Address> address = new HashSet<>();
 
     @Column(nullable = false)
     @Version

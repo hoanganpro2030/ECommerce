@@ -8,7 +8,7 @@ import vn.elca.training.model.entity.ACMUser;
 
 import java.util.List;
 
-@Mapper(config = MapConfiguration.class)
+@Mapper(config = MapConfiguration.class, uses = {AddressMapper.class})
 public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
@@ -17,6 +17,7 @@ public interface UserMapper {
     @Mapping(target = "isNotLocked", source = "notLocked")
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "authorities", ignore = true)
+//    @Mapping(target = "addressDto", source = "address")
     ACMUserDto ACMUserToACMUserDto(ACMUser entity);
 
     @Mapping(target = "password", ignore = true)
@@ -25,6 +26,7 @@ public interface UserMapper {
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "authorities", ignore = true)
     @Mapping(target = "verificationCode", ignore = true)
+    @Mapping(target = "address", ignore = true)
     ACMUser ACMUserDtoToACMUser(ACMUserDto dto);
 
     List<ACMUserDto> listACMUserToListACMUserDto(List<ACMUser> entity);
