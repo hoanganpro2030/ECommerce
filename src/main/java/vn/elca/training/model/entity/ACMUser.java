@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -39,8 +41,13 @@ public class ACMUser implements Serializable {
     private boolean isNotLocked;
     private String verificationCode;
 
-    @OneToMany(mappedBy = "acmUser", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "acmUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Fetch(FetchMode.SUBSELECT)
     private Set<Address> address = new HashSet<>();
+
+    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "acmUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PurchaseOrder> purchaseOrders = new HashSet<>();
 
     @Column(nullable = false)
     @Version

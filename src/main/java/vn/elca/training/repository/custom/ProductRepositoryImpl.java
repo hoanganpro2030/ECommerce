@@ -46,6 +46,14 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom{
     }
 
     @Override
+    public List<Product> findProductsByIds(List<Long> ids) {
+        return new JPAQuery<Product>(em)
+                .from(QProduct.product)
+                .where(QProduct.product.id.in(ids))
+                .fetch();
+    }
+
+    @Override
     public ListResponse<Product> searchProductByCriteria(ProductSearchCriteria criteria, Integer page, Integer pageSize) {
         BooleanExpression condition = QProduct.product.name.containsIgnoreCase("");
         condition = buildConditionForProductCriteria(criteria, condition);

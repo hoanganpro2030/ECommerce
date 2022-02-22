@@ -59,6 +59,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductDto> getProductsByIds(List<Long> ids) {
+        List<Product> products = productRepository.findProductsByIds(ids);
+        return MapService.INSTANCE.listProductToListProductDto(products);
+    }
+
+    @Override
     public ProductDto createProduct(ProductDto productDto) {
         Product product = MapService.INSTANCE.productDtoToProduct(productDto);
         Product pSaved = productRepository.save(product);

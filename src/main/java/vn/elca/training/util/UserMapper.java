@@ -27,6 +27,7 @@ public interface UserMapper {
     @Mapping(target = "authorities", ignore = true)
     @Mapping(target = "verificationCode", ignore = true)
     @Mapping(target = "address", ignore = true)
+    @Mapping(target = "purchaseOrders", ignore = true)
     ACMUser ACMUserDtoToACMUser(ACMUserDto dto);
 
     List<ACMUserDto> listACMUserToListACMUserDto(List<ACMUser> entity);

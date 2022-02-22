@@ -53,6 +53,12 @@ public class ProductController {
         return productService.getProductById(id);
     }
 
+    @PostMapping("/find-by-id")
+    @ResponseBody
+    public List<ProductDto> getListProductByIds(@RequestBody List<Long> ids) {
+        return productService.getProductsByIds(ids);
+    }
+
     @PostMapping("/create")
     @ResponseBody
     public ProductDto createProduct(@RequestBody @Valid ProductDto productDto){

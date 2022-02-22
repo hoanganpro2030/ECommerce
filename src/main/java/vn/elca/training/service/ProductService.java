@@ -12,6 +12,7 @@ public interface ProductService {
     ListResponse<ProductDto> getAllProductPaginate(Integer page, Integer size);
     ListResponse<ProductDto> searchProductByCriteria(ProductSearchCriteria criteria, Integer page, Integer pageSize);
     ProductDto getProductById(Long id) throws EntityNotFoundException;
+    List<ProductDto> getProductsByIds(List<Long> ids);
     ProductDto createProduct(ProductDto product);
     ProductDto updateProduct(ProductDto product);
     boolean deleteProduct(Long id) throws EntityNotFoundException;

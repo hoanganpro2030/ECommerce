@@ -24,6 +24,4 @@ public interface MapService {
     List<ProductDto> listProductToListProductDto(List<Product> entities);
     Product productDtoToProduct(ProductDto dto);
     List<Product> listProductDtoToListProduct(List<ProductDto> dtoes);
-    PurchaseOrder purchaseOrderDtoTopurchaseOrder(PurchaseOrderDto dto);
-    PurchaseOrderDto purchaseOrderTopurchaseOrderDto(PurchaseOrder entity);
 }

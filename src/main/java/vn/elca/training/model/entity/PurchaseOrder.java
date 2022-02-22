@@ -53,6 +53,10 @@ public class PurchaseOrder {
     @Enumerated(EnumType.STRING)
     private StatusOrder status;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private ACMUser acmUser;
+
     @Column(nullable = false)
     @Version
     private Integer version;

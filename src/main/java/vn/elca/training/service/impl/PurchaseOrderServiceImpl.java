@@ -7,19 +7,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.elca.training.model.dto.OrderDetail;
 import vn.elca.training.model.dto.PurchaseOrderDto;
+import vn.elca.training.model.entity.ACMUser;
 import vn.elca.training.model.entity.Product;
 import vn.elca.training.model.entity.PurchaseOrder;
 import vn.elca.training.model.exception.EntityNotFoundException;
 import vn.elca.training.model.exception.NotEnoughProductQuantityException;
+import vn.elca.training.model.exception.UserNotFoundException;
+import vn.elca.training.repository.ACMUserRepository;
 import vn.elca.training.repository.ProductRepository;
 import vn.elca.training.repository.PurchaseOrderRepository;
 import vn.elca.training.service.PurchaseOrderService;
 import vn.elca.training.util.MapService;
+import vn.elca.training.util.POMapper;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static vn.elca.training.constant.UserImplConstant.NO_USER_FOUND_BY_ID;
 
 @Service
 @Transactional(rollbackFor = Throwable.class)
@@ -30,19 +36,45 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private ACMUserRepository acmUserRepository;
+
     @Override
-    public PurchaseOrderDto getPurchaseOrderById(Long id) throws EntityNotFoundException {
-        return null;
+    public PurchaseOrderDto getPurchaseOrderById(Long id) {
+        return POMapper.INSTANCE.purchaseOrderTopurchaseOrderDto(purchaseOrderRepository.findOne(id));
+    }
+
+    @Override
+    public List<PurchaseOrderDto> getPurchaseOrderByUserId(Long uid) {
+        return POMapper.INSTANCE.purchaseOrderListTopurchaseOrderDtoList(purchaseOrderRepository.findPObyUserId(uid));
     }
 
     @Override
     public PurchaseOrderDto createPurchaseOrder(PurchaseOrderDto purchaseOrderDto) throws IOException, NotEnoughProductQuantityException {
-        PurchaseOrder purchaseOrder = MapService.INSTANCE.purchaseOrderDtoTopurchaseOrder(purchaseOrderDto);
+        PurchaseOrder purchaseOrder = createPOGeneral(purchaseOrderDto);
+        PurchaseOrder poSave = purchaseOrderRepository.save(purchaseOrder);
+        return POMapper.INSTANCE.purchaseOrderTopurchaseOrderDto(poSave);
+    }
+
+    private PurchaseOrder createPOGeneral(PurchaseOrderDto purchaseOrderDto) throws IOException, NotEnoughProductQuantityException {
+        PurchaseOrder purchaseOrder = POMapper.INSTANCE.purchaseOrderDtoTopurchaseOrder(purchaseOrderDto);
         purchaseOrder.setOrderDate(LocalDate.now());
         updateQuantityOfProductsInPO(purchaseOrder);
-        PurchaseOrder poSave = purchaseOrderRepository.save(purchaseOrder);
-        return MapService.INSTANCE.purchaseOrderTopurchaseOrderDto(poSave);
+        return purchaseOrder;
     }
+
+    @Override
+    public PurchaseOrderDto createPurchaseOrderForUser(PurchaseOrderDto purchaseOrderDto, Long uid) throws IOException, NotEnoughProductQuantityException, UserNotFoundException {
+        PurchaseOrder purchaseOrder = createPOGeneral(purchaseOrderDto);
+        ACMUser acmUser = acmUserRepository.findUserById(uid);
+        if (acmUser == null) {
+            throw new UserNotFoundException(NO_USER_FOUND_BY_ID + uid);
+        }
+        purchaseOrder.setAcmUser(acmUser);
+        PurchaseOrder poSave = purchaseOrderRepository.save(purchaseOrder);
+        return POMapper.INSTANCE.purchaseOrderTopurchaseOrderDto(poSave);
+    }
+
 
     private void updateQuantityOfProductsInPO(PurchaseOrder purchaseOrder) throws IOException, NotEnoughProductQuantityException {
         ObjectMapper objectMapper = new ObjectMapper();
